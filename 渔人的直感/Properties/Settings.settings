@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="渔人的直感.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Height" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="Width" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">265</Value>
+    </Setting>
+    <Setting Name="Location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="TimerColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#6FAE5F</Value>
+    </Setting>
+    <Setting Name="LTugColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#69AFF3</Value>
+    </Setting>
+    <Setting Name="MTugColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#CC99FF</Value>
+    </Setting>
+    <Setting Name="HTugColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#F1C64A</Value>
+    </Setting>
+    <Setting Name="StatusColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#0078D7</Value>
+    </Setting>
+    <Setting Name="Offset" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1CAB970</Value>
+    </Setting>
+    <Setting Name="HideOnTaskBar" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="HideWhenNotActived" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

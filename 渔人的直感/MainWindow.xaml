@@ -1,0 +1,128 @@
+﻿<Window x:Class="渔人的直感.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:models="clr-namespace:渔人的直感.Models"
+        xmlns:properties="clr-namespace:渔人的直感.Properties"
+        Title="渔人的直感" Height="51" Width="262.418" Topmost="True"
+        ShowInTaskbar="{Binding Path=HideOnTaskBar,Source={x:Static properties:Settings.Default},Converter={StaticResource InverseBooleanConverter}}"
+        WindowStyle="None" Background="#00FFFFFF" AllowsTransparency="True" WindowStartupLocation="CenterScreen"
+        MouseLeftButtonDown="WindowDragMove" ResizeMode="NoResize" Loaded="Window_Loaded">
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <models:HeightToRadiusConverter x:Key="HeightToRadiusConverter" />
+            <Style TargetType="{x:Type ProgressBar}" x:Key="{x:Type ProgressBar}">
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="Height" Value="15" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="Padding" Value="5,0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ProgressBar}">
+                            <Grid Background="#00000000">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Determinate" />
+                                        <VisualState x:Name="Indeterminate">
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <PointAnimationUsingKeyFrames Storyboard.TargetName="Animation"
+                                                                              Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)">
+                                                    <EasingPointKeyFrame KeyTime="0:0:0" Value="0.5,0.5" />
+                                                    <EasingPointKeyFrame KeyTime="0:0:1.5" Value="1.95,0.5" />
+                                                    <EasingPointKeyFrame KeyTime="0:0:3" Value="0.5,0.5" />
+                                                </PointAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Grid Height="{TemplateBinding Height}">
+                                    <Border Background="#000000"
+                                            CornerRadius="{Binding Height, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource HeightToRadiusConverter}}"
+                                            Opacity="0.05" />
+                                    <Border BorderBrush="#000000" BorderThickness="1"
+                                            CornerRadius="{Binding Height, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource HeightToRadiusConverter}}"
+                                            Opacity="0.1" />
+                                    <Grid Margin="{TemplateBinding BorderThickness}">
+                                        <Border Name="PART_Track" />
+                                        <Grid Name="PART_Indicator" ClipToBounds="True" HorizontalAlignment="Left">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Name="width1" />
+                                                <ColumnDefinition Name="width2" Width="0" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Name="Animation" RenderTransformOrigin="0.5,0.5">
+                                                <UIElement.RenderTransform>
+                                                    <TransformGroup>
+                                                        <ScaleTransform ScaleY="-1" ScaleX="1" />
+                                                        <SkewTransform AngleY="0" AngleX="0" />
+                                                        <RotateTransform Angle="180" />
+                                                        <TranslateTransform />
+                                                    </TransformGroup>
+                                                </UIElement.RenderTransform>
+                                                <Border
+                                                    CornerRadius="{Binding Height, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource HeightToRadiusConverter}}">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0"
+                                                                             Opacity="0.8">
+                                                            <GradientStop Offset="0.5"
+                                                                          Color="{Binding Color, Mode=OneWay}" />
+                                                            <GradientStop Offset="1.5" Color="white" />
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                    <Viewbox HorizontalAlignment="Left" StretchDirection="DownOnly"
+                                                             Margin="{TemplateBinding Padding}"
+                                                             SnapsToDevicePixels="True">
+                                                        <TextBlock Foreground="#ffffff" SnapsToDevicePixels="True"
+                                                                   FontSize="{TemplateBinding FontSize}"
+                                                                   VerticalAlignment="Center"
+                                                                   RenderTransformOrigin="0.5,0.5"
+                                                                   Text="{Binding Text, Mode=OneWay}">
+                                                            <UIElement.RenderTransform>
+                                                                <TransformGroup>
+                                                                    <ScaleTransform ScaleY="1" ScaleX="-1" />
+                                                                    <SkewTransform AngleY="0" AngleX="0" />
+                                                                    <RotateTransform Angle="0" />
+                                                                    <TranslateTransform />
+                                                                </TransformGroup>
+                                                            </UIElement.RenderTransform>
+                                                        </TextBlock>
+                                                    </Viewbox>
+                                                </Border>
+                                                <Border BorderBrush="#000000" BorderThickness="1"
+                                                        CornerRadius="{Binding Height, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource HeightToRadiusConverter}}"
+                                                        Opacity="0.1" />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" Value="#c5c5c5" />
+                                </Trigger>
+                                <Trigger Property="ProgressBar.IsIndeterminate" Value="True">
+                                    <Setter TargetName="width1" Property="Width" Value="0.25*" />
+                                    <Setter TargetName="width2" Property="Width" Value="0.725*" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <ContextMenu x:Key="ContextMenu">
+                <MenuItem Name="Settings" Header="设置" Click="Settings_Click" />
+                <MenuItem Name="FishTracker" Header="捕鱼时钟" Click="FishTracker_Click" />
+                <Separator />
+                <MenuItem Name="Exit" Header="退出" Click="Exit_Click" />
+            </ContextMenu>
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
+    <StackPanel Orientation="Vertical" Margin="0">
+        <ProgressBar Name="BiteProgressBar" Visibility="{Binding Visibility, Mode=OneWay}"
+                     ContextMenu="{StaticResource ContextMenu}" Height="15" Margin="5,5,5,5" VerticalAlignment="Top"
+                     Maximum="70" Value="{Binding ProgressBarValue, Mode=OneWay}" />
+        <ProgressBar Name="StatusProgressBar" Visibility="{Binding Visibility, Mode=OneWay}"
+                     ContextMenu="{StaticResource ContextMenu}" Height="15" VerticalAlignment="Top" Margin="5,5,5,5"
+                     Maximum="{Binding Duration}" Value="{Binding ProgressBarValue, Mode=OneWay}" />
+    </StackPanel>
+</Window>

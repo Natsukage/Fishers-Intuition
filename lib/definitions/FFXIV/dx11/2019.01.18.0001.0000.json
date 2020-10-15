@@ -1,0 +1,58 @@
+{
+  "TerritoryType": {
+    "PointerPath": [
+      28203656,
+      1448
+    ],
+    "Module": {
+      "ModuleName": "ffxiv_dx11.exe"
+    }
+  },
+  "Time": {
+    "PointerPath": [
+      26744304,
+      16,
+      8,
+      40,
+      128
+    ],
+    "Module": {
+      "ModuleName": "ffxiv_dx11.exe"
+    }
+  },
+  "Weather": {
+    "PointerPath": [
+      26573224,
+      39
+    ],
+    "Module": {
+      "ModuleName": "ffxiv_dx11.exe"
+    }
+  },
+  "ActorTable": 27957176,
+  "ActorID": 116,
+  "Name": 48,
+  "BnpcBase": 128,
+  "OwnerID": 132,
+  "ModelChara": 5884,
+  "Job": 6032,
+  "Level": 6034,
+  "World": 5964,
+  "CompanyTag": 5802,
+  "Customize": 5768,
+  "RenderMode": 260,
+  "ObjectKind": 140,
+  "SubKind": 141,
+  "Head": 5608,
+  "Body": 5612,
+  "Hands": 5616,
+  "Legs": 5620,
+  "Feet": 5624,
+  "Ear": 5628,
+  "Neck": 5632,
+  "Wrist": 5636,
+  "RRing": 5640,
+  "LRing": 5644,
+  "MainWep": 4930,
+  "OffWep": 5032
+}

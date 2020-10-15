@@ -1,0 +1,9 @@
+﻿<Application x:Class="渔人的直感.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:渔人的直感.Models"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <models:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </Application.Resources>
+</Application>
