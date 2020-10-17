@@ -73,8 +73,8 @@ namespace 渔人的直感
 
 
             Scanner = new SigScanner(GameProcess, GameProcessMainModule);
-
             Data.Initialize(Scanner);
+
             Worker = new BackgroundWorker();
             Worker.DoWork += OnWork;
             Worker.WorkerSupportsCancellation = true;
@@ -275,6 +275,10 @@ namespace 渔人的直感
         private void FishTracker_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("http://fish.senriakane.com/");
+        }
+        private void FishCake_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://ricecake404.gitee.io/ff14-list");
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)

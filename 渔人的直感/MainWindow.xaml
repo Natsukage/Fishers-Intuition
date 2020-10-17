@@ -111,7 +111,10 @@
             </Style>
             <ContextMenu x:Key="ContextMenu">
                 <MenuItem Name="Settings" Header="设置" Click="Settings_Click" />
-                <MenuItem Name="FishTracker" Header="捕鱼时钟" Click="FishTracker_Click" />
+                <MenuItem Header="捕鱼时钟">
+                    <MenuItem Name="FishTracker" Header="FishTracker" Click="FishTracker_Click" />
+                    <MenuItem Name="FishCake" Header="鱼糕" Click="FishCake_Click" />
+                </MenuItem>
                 <Separator />
                 <MenuItem Name="Exit" Header="退出" Click="Exit_Click" />
             </ContextMenu>
