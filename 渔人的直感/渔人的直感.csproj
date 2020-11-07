@@ -74,7 +74,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\HideFromAltTab.cs" />
+    <Compile Include="Models\WindowStyleHelper.cs" />
     <Compile Include="Models\memory.cs" />
     <Compile Include="Models\MemoryRegionResult.cs" />
     <Compile Include="Models\SigScanner.cs" />

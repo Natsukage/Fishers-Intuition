@@ -25,6 +25,7 @@ namespace 渔人的直感
         private readonly Fish Fish = new Fish();
         private readonly Status Status = new Status();
 
+        public static MainWindow CurrentMainWindow;
         private Window _settingsWindow;
 
         public MainWindow()
@@ -71,7 +72,6 @@ namespace 渔人的直感
                 Application.Current.Dispatcher.Invoke(() => { Application.Current.Shutdown(); });
             };
 
-
             Scanner = new SigScanner(GameProcess, GameProcessMainModule);
             Data.Initialize(Scanner);
 
@@ -80,6 +80,7 @@ namespace 渔人的直感
             Worker.WorkerSupportsCancellation = true;
             Worker.RunWorkerAsync();
 
+            CurrentMainWindow = this;
             Closing += SaveLocation;
             return true;
         }
@@ -295,11 +296,7 @@ namespace 渔人的直感
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowInteropHelper wndHelper = new WindowInteropHelper(this);
-            int exStyle =
-                (int) HideFromAltTab.GetWindowLong(wndHelper.Handle, -20); //(int)GetWindowLongFields.GWL_EXSTYLE = -20
-            exStyle |= 0x00000080; // (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW = 0x00000080
-            HideFromAltTab.SetWindowLong(wndHelper.Handle, -20, (IntPtr) exStyle);
+            WindowStyleHelper.ExStyle |= 0x00000080; //ExtendedWindowStyles.WS_EX_TOOLWINDOW = 0x00000080
         }
     }
 }
