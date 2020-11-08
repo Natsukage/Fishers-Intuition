@@ -29,7 +29,7 @@
     <Setting Name="Offset" Type="System.String" Scope="User">
       <Value Profile="(Default)">1CAB970</Value>
     </Setting>
-    <Setting Name="HideOnTaskBar" Type="System.Boolean" Scope="User">
+    <Setting Name="ClickThrough" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="HideWhenNotActived" Type="System.Boolean" Scope="User">

@@ -39,7 +39,7 @@
                 <TextBlock TextWrapping="Wrap" Text="鱼眼/天气颜色" Margin="4" Width="110" />
                 <TextBox Text="{Binding Path=StatusColor,Source={x:Static Properties:Settings.Default}}" Width="80" Margin="4"/>
             </StackPanel>
-            <CheckBox Content="从任务栏和 Alt-Tab 列表中隐藏" Margin="4" IsChecked="{Binding Path=HideOnTaskBar,Source={x:Static Properties:Settings.Default}}"/>
+            <CheckBox Content="鼠标穿透(将同时禁用菜单与拖动)" Margin="4" IsChecked="{Binding Path=ClickThrough,Source={x:Static Properties:Settings.Default}}"/>
             <CheckBox Content="未活动时隐藏窗体(仅抛竿时可见)" Margin="4" IsChecked="{Binding Path=HideWhenNotActived,Source={x:Static Properties:Settings.Default}}" />
             <StackPanel Orientation="Horizontal">
                 <Button Content="应用" Width="98" Margin="2" Click="Apply_Button_Click" />

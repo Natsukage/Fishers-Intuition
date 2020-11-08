@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
 using 渔人的直感.Models;
 
 
@@ -297,6 +296,8 @@ namespace 渔人的直感
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             WindowStyleHelper.ExStyle |= 0x00000080; //ExtendedWindowStyles.WS_EX_TOOLWINDOW = 0x00000080
+            if (Properties.Settings.Default.ClickThrough)
+                WindowStyleHelper.ExStyle |= 0x00000020; //ExtendedWindowStyles.WS_EX_TRANSPARENT  = 0x00000020
         }
 
         //由于Win10的bug，全屏程序在托盘打开的ContextMenu可能不会正确失去焦点。这里令左键点击托盘图标时强制关闭其弹出的右键菜单。

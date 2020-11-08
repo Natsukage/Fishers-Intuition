@@ -134,12 +134,12 @@ namespace 渔人的直感.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool HideOnTaskBar {
+        public bool ClickThrough {
             get {
-                return ((bool)(this["HideOnTaskBar"]));
+                return ((bool)(this["ClickThrough"]));
             }
             set {
-                this["HideOnTaskBar"] = value;
+                this["ClickThrough"] = value;
             }
         }
         

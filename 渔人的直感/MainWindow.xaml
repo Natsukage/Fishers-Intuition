@@ -3,7 +3,7 @@
         xmlns:properties="clr-namespace:渔人的直感.Properties"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         Title="渔人的直感" Height="51" Width="262.418" Topmost="True"
-        ShowInTaskbar="{Binding Path=HideOnTaskBar,Source={x:Static properties:Settings.Default},Converter={StaticResource InverseBooleanConverter}}"
+        ShowInTaskbar="False"
         WindowStyle="None" Background="#00FFFFFF" AllowsTransparency="True" WindowStartupLocation="CenterScreen"
         MouseLeftButtonDown="WindowDragMove" ResizeMode="NoResize" Loaded="Window_Loaded">
     <FrameworkElement.Resources>
