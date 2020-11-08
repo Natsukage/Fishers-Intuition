@@ -298,5 +298,8 @@ namespace 渔人的直感
         {
             WindowStyleHelper.ExStyle |= 0x00000080; //ExtendedWindowStyles.WS_EX_TOOLWINDOW = 0x00000080
         }
+
+        //由于Win10的bug，全屏程序在托盘打开的ContextMenu可能不会正确失去焦点。这里令左键点击托盘图标时强制关闭其弹出的右键菜单。
+        private void TaskbarIcon_TrayLeftMouseDown(object sender, RoutedEventArgs e) => CurrentMainWindow.TrayIcon.ContextMenu.IsOpen = false;
     }
 }
