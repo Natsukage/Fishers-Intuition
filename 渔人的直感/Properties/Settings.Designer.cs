@@ -121,18 +121,6 @@ namespace 渔人的直感.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1CAB970")]
-        public string Offset {
-            get {
-                return ((string)(this["Offset"]));
-            }
-            set {
-                this["Offset"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ClickThrough {
             get {

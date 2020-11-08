@@ -23,12 +23,7 @@ namespace 渔人的直感.Models
         public static void Initialize(SigScanner scanner)
         {
             //Status用于获取EventPlay时玩家动作，判断抛竿、咬钩、脱钩动作。
-            //技术力不足，没法自动查找抛竿动作的地址。只能在每次更新后手动查找。Todo：找到方法自动查找Status地址。
-            //手动查找教程:https://github.com/Natsukage/Fishers-Intuition/blob/master/how-to-find-offset.md
-            //StatusPtr = scanner.GetStaticAddressFromSig("48 8B 0D ? ? ? ? 48 89 44 24 ? E8 ? ? ? ? B0 ?") + 0x8;
-            int.TryParse(Properties.Settings.Default.Offset, System.Globalization.NumberStyles.HexNumber, null,
-                out var offset);
-            StatusPtr = scanner.Module.BaseAddress + offset;
+            StatusPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 48 8B AC 24 ? ? ? ?");
 
             //ActorTable用于获取UIStatusEffects地址，追踪玩家身上的buff
             ActorTable = scanner.GetStaticAddressFromSig("88 91 ?? ?? ?? ?? 48 8D 3D ?? ?? ?? ??");

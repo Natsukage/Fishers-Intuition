@@ -8,14 +8,6 @@
                 <TextBox Text="{Binding Path=Height,Source={x:Static Properties:Settings.Default}}" Width="63" Margin="4" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock TextWrapping="Wrap" Text="偏移坐标   (请确保和游戏版本对应)" Margin="4,4,4,0" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <CheckBox Name="LockOffset" Margin="1,4" ToolTip="修改偏移坐标（危！）" />
-                <TextBlock TextWrapping="Wrap" Text="ffxiv_dx11.exe+0x" Margin="4" IsEnabled="{Binding ElementName=LockOffset, Path=IsChecked}" />
-                <TextBox Name="TextOffset" Text="{Binding Path=Offset,Source={x:Static Properties:Settings.Default}}" Margin="-4,4,4,4" IsEnabled="{Binding ElementName=LockOffset, Path=IsChecked}" Width="75" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
                 <TextBlock TextWrapping="Wrap" Text="抛竿颜色" Margin="4" Width="110" />
                 <TextBox  Text="{Binding Path=TimerColor,Source={x:Static Properties:Settings.Default}}" Width="80" Margin="4" />
             </StackPanel>

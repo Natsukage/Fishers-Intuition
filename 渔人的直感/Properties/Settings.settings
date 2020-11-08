@@ -26,9 +26,6 @@
     <Setting Name="StatusColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#0078D7</Value>
     </Setting>
-    <Setting Name="Offset" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1CAB970</Value>
-    </Setting>
     <Setting Name="ClickThrough" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
