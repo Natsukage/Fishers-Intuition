@@ -34,6 +34,8 @@ namespace 渔人的直感
 
         private void Reset_Button_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow.CurrentMainWindow.Left = -1;
+            MainWindow.CurrentMainWindow.Top = -1;
             Properties.Settings.Default.Reset();
         }
     }
