@@ -41,10 +41,13 @@ namespace 渔人的直感.Models
                          0x64;
 
             SpecialWeathers.Add(new SpecialWeather {Id = 145, Name = "幻海流", Duration = 120f});
-            SpecialWeathers.Add(new SpecialWeather {Id = 133, Name = "灵烈火", Duration = 600f});
-            SpecialWeathers.Add(new SpecialWeather {Id = 134, Name = "灵飘尘", Duration = 600f});
-            SpecialWeathers.Add(new SpecialWeather {Id = 135, Name = "灵飞电", Duration = 600f});
-            SpecialWeathers.Add(new SpecialWeather {Id = 136, Name = "灵罡风", Duration = 600f});
+            if (Properties.Settings.Default.CheckDiademWeather)
+            {
+                SpecialWeathers.Add(new SpecialWeather { Id = 133, Name = "灵烈火", Duration = 600f });
+                SpecialWeathers.Add(new SpecialWeather { Id = 134, Name = "灵飘尘", Duration = 600f });
+                SpecialWeathers.Add(new SpecialWeather { Id = 135, Name = "灵飞电", Duration = 600f });
+                SpecialWeathers.Add(new SpecialWeather { Id = 136, Name = "灵罡风", Duration = 600f });
+            }
             //SpecialWeathers.Add(new SpecialWeather { Id = 1, Name = "碧空（测试）", Duration = 60f });
             //SpecialWeathers.Add(new SpecialWeather { Id = 2, Name = "晴朗（测试）", Duration = 60f });
         }

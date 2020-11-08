@@ -154,5 +154,17 @@ namespace 渔人的直感.Properties {
                 this["HideWhenNotActived"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CheckDiademWeather {
+            get {
+                return ((bool)(this["CheckDiademWeather"]));
+            }
+            set {
+                this["CheckDiademWeather"] = value;
+            }
+        }
     }
 }

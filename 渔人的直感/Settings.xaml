@@ -8,12 +8,12 @@
                 <TextBox Text="{Binding Path=Height,Source={x:Static Properties:Settings.Default}}" Width="63" Margin="4" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock TextWrapping="Wrap" Text="偏移坐标   (请确保和游戏版本对应)" Margin="4,4,4,0"/>
+                <TextBlock TextWrapping="Wrap" Text="偏移坐标   (请确保和游戏版本对应)" Margin="4,4,4,0" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <CheckBox Name="LockOffset" Margin="1,4" ToolTip="修改偏移坐标（危！）" />
                 <TextBlock TextWrapping="Wrap" Text="ffxiv_dx11.exe+0x" Margin="4" IsEnabled="{Binding ElementName=LockOffset, Path=IsChecked}" />
-                <TextBox Name ="TextOffset" Text="{Binding Path=Offset,Source={x:Static Properties:Settings.Default}}" Margin="-4,4,4,4" IsEnabled="{Binding ElementName=LockOffset, Path=IsChecked}" Width="75" />
+                <TextBox Name="TextOffset" Text="{Binding Path=Offset,Source={x:Static Properties:Settings.Default}}" Margin="-4,4,4,4" IsEnabled="{Binding ElementName=LockOffset, Path=IsChecked}" Width="75" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock TextWrapping="Wrap" Text="抛竿颜色" Margin="4" Width="110" />
@@ -39,13 +39,13 @@
                 <TextBlock TextWrapping="Wrap" Text="鱼眼/天气颜色" Margin="4" Width="110" />
                 <TextBox Text="{Binding Path=StatusColor,Source={x:Static Properties:Settings.Default}}" Width="80" Margin="4"/>
             </StackPanel>
-            <CheckBox Content="鼠标穿透(将同时禁用菜单与拖动)" Margin="4" IsChecked="{Binding Path=ClickThrough,Source={x:Static Properties:Settings.Default}}"/>
-            <CheckBox Content="未活动时隐藏窗体(仅抛竿时可见)" Margin="4" IsChecked="{Binding Path=HideWhenNotActived,Source={x:Static Properties:Settings.Default}}" />
+            <CheckBox Content="监视空岛特殊天气" Margin="4" IsChecked="{Binding Path=CheckDiademWeather,Source={x:Static Properties:Settings.Default}}" ToolTip="当空岛特殊天气触发时启动10分钟倒计时。此选项不影响幻海流计时。"/>
+            <CheckBox Content="鼠标穿透(将同时禁用菜单与拖动)" Margin="4" IsChecked="{Binding Path=ClickThrough,Source={x:Static Properties:Settings.Default}}" ToolTip="阻止直感窗体因获得焦点而干扰游戏。此选项开启后直感的计时条将无法拖动或右键展开菜单，需要修改时需要使用托盘图标右键呼出设置菜单。" />
+            <CheckBox Content="未活动时隐藏窗体(仅抛竿时可见)" Margin="4" IsChecked="{Binding Path=HideWhenNotActived,Source={x:Static Properties:Settings.Default}}" ToolTip="当未处于抛竿或特殊天气时将会隐藏直感窗体。直感窗体隐藏中的场合，只能通过结束游戏或右键托盘图标退出直感进程。" />
             <StackPanel Orientation="Horizontal">
                 <Button Content="应用" Width="98" Margin="2" Click="Apply_Button_Click" />
                 <Button Content="重置" Width="98" Margin="2" Click="Reset_Button_Click" />
             </StackPanel>
-            
         </StackPanel>
     </GroupBox>
 </Window>
