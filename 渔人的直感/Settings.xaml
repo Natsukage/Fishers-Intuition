@@ -12,10 +12,6 @@
                 <TextBox  Text="{Binding Path=TimerColor,Source={x:Static Properties:Settings.Default}}" Width="80" Margin="4" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock TextWrapping="Wrap" Text="抛竿颜色" Margin="4" Width="110" />
-                <TextBox  Text="{Binding Path=TimerColor,Source={x:Static Properties:Settings.Default}}" Width="80" Margin="4" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
                 <TextBlock TextWrapping="Wrap" Text="轻杆颜色" Margin="4" Width="110" />
                 <TextBox  Text="{Binding Path=LTugColor,Source={x:Static Properties:Settings.Default}}" Width="80" Margin="4" />
             </StackPanel>

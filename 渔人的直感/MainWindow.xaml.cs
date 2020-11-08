@@ -83,7 +83,9 @@ namespace 渔人的直感
             Closing += SaveLocation;
             return true;
         }
-
+        /// <summary>
+        ///     读取配置文件并设置窗体尺寸等
+        /// </summary>
         private void LoadConfig()
         {
             BiteProgressBar.Height = Properties.Settings.Default.Height;
@@ -105,7 +107,17 @@ namespace 渔人的直感
                 WindowStartupLocation = WindowStartupLocation.Manual;
             }
         }
-
+        /// <summary>
+        ///     设置窗体的隐藏与鼠标穿透属性
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowStyleHelper.ExStyle |= 0x00000080; //ExtendedWindowStyles.WS_EX_TOOLWINDOW = 0x00000080
+            if (Properties.Settings.Default.ClickThrough)
+                WindowStyleHelper.ExStyle |= 0x00000020; //ExtendedWindowStyles.WS_EX_TRANSPARENT  = 0x00000020
+        }
 
         /// <summary>
         ///     循环检测玩家状态.
@@ -146,7 +158,6 @@ namespace 渔人的直感
                 Thread.Sleep(50);
             }
         }
-
         private void StatusChange(short newStatus)
         {
             switch (newStatus)
@@ -200,7 +211,6 @@ namespace 渔人的直感
                     break;
             }*/
         }
-
         private void BuffCheck(IntPtr buffTablePtr)
         {
             if (!Status.IsActive)
@@ -234,7 +244,6 @@ namespace 渔人的直感
                     Status.End();
             }
         }
-
         private void WeatherCheck(IntPtr weatherPtr)
         {
             var currentWeather = Scanner.ReadByte(weatherPtr);
@@ -256,6 +265,8 @@ namespace 渔人的直感
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
         }
+        //由于Win10的bug，全屏程序在托盘打开的ContextMenu可能不会正确失去焦点。这里令左键点击托盘图标时强制关闭其弹出的右键菜单。
+        private void TaskbarIcon_TrayLeftMouseDown(object sender, RoutedEventArgs e) => CurrentMainWindow.TrayIcon.ContextMenu.IsOpen = false;
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
@@ -272,19 +283,11 @@ namespace 渔人的直感
             }
         }
 
-        private void FishTracker_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start("http://fish.senriakane.com/");
-        }
-        private void FishCake_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start("https://ricecake404.gitee.io/ff14-list");
-        }
+        private void FishTracker_Click(object sender, RoutedEventArgs e) => Process.Start("http://fish.senriakane.com/");
 
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
+        private void FishCake_Click(object sender, RoutedEventArgs e) => Process.Start("https://ricecake404.gitee.io/ff14-list");
+
+        private void Exit_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
 
         private void SaveLocation(object sender, EventArgs e)
         {
@@ -292,15 +295,5 @@ namespace 渔人的直感
                 Properties.Settings.Default.Location = new System.Drawing.Point((int) Left, (int) Top);
             Properties.Settings.Default.Save();
         }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowStyleHelper.ExStyle |= 0x00000080; //ExtendedWindowStyles.WS_EX_TOOLWINDOW = 0x00000080
-            if (Properties.Settings.Default.ClickThrough)
-                WindowStyleHelper.ExStyle |= 0x00000020; //ExtendedWindowStyles.WS_EX_TRANSPARENT  = 0x00000020
-        }
-
-        //由于Win10的bug，全屏程序在托盘打开的ContextMenu可能不会正确失去焦点。这里令左键点击托盘图标时强制关闭其弹出的右键菜单。
-        private void TaskbarIcon_TrayLeftMouseDown(object sender, RoutedEventArgs e) => CurrentMainWindow.TrayIcon.ContextMenu.IsOpen = false;
     }
 }
