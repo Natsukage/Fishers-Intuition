@@ -9,19 +9,27 @@ namespace 渔人的直感.Models
     public static class Data
     {
         
-        public const int FishEyesBuffId = 762; //50; //       鱼眼的Buff ID
+        public const int FishEyesBuffId = 762; // 50; //      鱼眼的Buff ID
 
         public static List<SpecialWeather> SpecialWeathers = new List<SpecialWeather>();
 
+        private static SigScanner _scanner;
         public static IntPtr StatusPtr;
         public static IntPtr ActorTable;
         //public static IntPtr BuffTablePtr;
-        public static IntPtr WeatherPtr;
+        private static IntPtr weatherPtr;
+
+        public static IntPtr WeatherPtr
+        {
+            get => _scanner.ReadIntPtr(weatherPtr) + 0x20;
+        }
+
 
         public const int UiStatusEffects = 6488; //UIStatusEffects相对于ActorTable的偏移。此值随着版本更新随时可能发生改变。
 
         public static void Initialize(SigScanner scanner)
         {
+            _scanner = scanner;
             //Status用于获取EventPlay时玩家动作，判断抛竿、咬钩、脱钩动作。
             StatusPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 48 8B AC 24 ? ? ? ?");
 
@@ -32,8 +40,8 @@ namespace 渔人的直感.Models
             //Data.BuffTablePtr = scanner.ReadIntPtr(Data.ActorTable) + 6488;
 
             //Weather用于获取当前天气，判断幻海流、空岛特殊天气触发等。
-            WeatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? E8 ? ? ? ? 0F B6 C8 E8 ? ? ? ? 45 33 ED") +
-                         0x64;
+            weatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 0F 28 DE") + 8;
+
 
             SpecialWeathers.Add(new SpecialWeather {Id = 145, Name = "幻海流", Duration = 120f});
             if (Properties.Settings.Default.CheckDiademWeather)
