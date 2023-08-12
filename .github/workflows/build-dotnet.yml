@@ -1,0 +1,36 @@
+name: Build .NET Framework
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Restore NuGet packages and Build .NET Framework
+      run: msbuild 渔人的直感.sln /restore /p:Configuration=Release
+
+    - name: Create temp directory and move files
+      run: |
+        mkdir temp_artifact
+        cp 渔人的直感/bin/Release/渔人的直感.exe temp_artifact/
+        cp 渔人的直感/Wav/* temp_artifact/
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: 渔人的直感
+        path: temp_artifact/*
