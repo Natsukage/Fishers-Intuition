@@ -148,5 +148,11 @@
       <Version>1.0.8</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Wav\中杆.wav" />
+    <Content Include="Wav\轻杆.wav" />
+    <Content Include="Wav\鱼王杆.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
