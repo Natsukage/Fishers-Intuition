@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Input;
 using 渔人的直感.Models;
 
-
 namespace 渔人的直感
 {
     /// <summary>
@@ -27,10 +26,10 @@ namespace 渔人的直感
         public static MainWindow CurrentMainWindow;
         private Window _settingsWindow;
 
-        private float CompensatedTime = 0f;
-        private byte LastOceanFishingZone = 0;
-        private bool LastZoneHasSpectralCurrent = false;
-        private bool CurrentZoneHadSpectralCurrent = false;
+        private float CompensatedTime;
+        private byte LastOceanFishingZone;
+        private bool LastZoneHasSpectralCurrent;
+        private bool CurrentZoneHadSpectralCurrent;
 
         public MainWindow()
         {

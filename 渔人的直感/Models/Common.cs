@@ -78,7 +78,7 @@ namespace 渔人的直感.Models
             weatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 0F 28 DE") + 8;
 
             territoryTypePtr = scanner.GetStaticAddressFromSig("8B 05 ? ? ? ? 45 0F B6 F9");
-            
+
             //获取EventFrameworkPtr
             eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 8B 35 ?? ?? ?? ?? 0F B6 EA 4C 8B F1");
 
@@ -89,8 +89,8 @@ namespace 渔人的直感.Models
             contentTimeLeftOffset = scanner.ReadInt16(scanner.ScanText("F3 0F 10 81 ?? ?? ?? ?? 0F 2F C4"), 4);
             contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B9 ?? ?? ?? ?? ?? 48 8B D9 75 ?? 48 8B 49 ?? BA"), 2);
             eventInfoOffset = scanner.ReadInt16(scanner.ScanText("48 8B 88 ? ? ? ? 45 8B C6"), 3);
-            UiStatusEffects = scanner.ReadInt32(scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"), 3);
 
+            UiStatusEffects = scanner.ReadInt32(scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"), 3);
 
             SpecialWeathers.Add(new SpecialWeather { Id = 145, Name = "幻海流", Duration = 120f });
             if (Properties.Settings.Default.CheckDiademWeather)
@@ -110,6 +110,7 @@ namespace 渔人的直感.Models
             //找不到EventFrameworkPtr
             if (eventFrameworkPtr == IntPtr.Zero)
             {
+                Debug.WriteLine("Invalid eventFrameworkPtr");
                 return IntPtr.Zero;
             }
 
@@ -117,20 +118,24 @@ namespace 渔人的直感.Models
             //找不到ContentDirector
             if (directorPtr == IntPtr.Zero)
             {
+                Debug.WriteLine("Invalid directorPtr");
                 return IntPtr.Zero;
             }
 
-            //检查Director类型是否为InstanceContent.下面这个获取方法也可以,但rebuild的函数里不是这样实现的,所以就注释掉了
-            // var directorType = BitConverter.ToUInt16(_scanner.ReadBytes(directorPtr + 0x22, 2), 0);
-            var directorType = BitConverter.ToUInt16(_scanner.ReadBytes(_scanner.ReadIntPtr(directorPtr + eventInfoOffset), 2), 0);
+            //检查Director类型是否为InstanceContent. 下面这个也可以
+            // var directorType = _scanner.ReadInt16(_scanner.ReadIntPtr(directorPtr + eventInfoOffset), 2);
+            //这个是从FFXivClientStructs里看到的,应该不会变的吧
+            var directorType = BitConverter.ToUInt16(_scanner.ReadBytes(directorPtr + 0x22, 2), 0);
             if (directorType != 0x8003)
             {
+                Debug.WriteLine("Invalid director type");
                 return IntPtr.Zero;
             }
 
             //检查InstanceContent的类型是否为OceanFishing
             if (_scanner.ReadByte(directorPtr, contentDirectorTypeOffset) != 16)
             {
+                Debug.WriteLine("Invalid InstanceContent type");
                 return IntPtr.Zero;
             }
 
