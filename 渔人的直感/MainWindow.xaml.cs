@@ -234,10 +234,7 @@ namespace 渔人的直感
             }
             else if (buffTablePtr == (IntPtr) Data.UiStatusEffects) //当前激活中 且 指针指向空角色（在登录界面等未加载人物的情况）
             {
-                LastZoneHasSpectralCurrent = false;
-                CurrentZoneHadSpectralCurrent = false;
-                CompensatedTime = 0f;
-                LastOceanFishingZone = byte.MaxValue;
+                Reset();
                 Status.End();
             }
             else if (Status.Type == Status.StatusType.FishEyes)
@@ -282,7 +279,6 @@ namespace 渔人的直感
                             else if (CompensatedTime > 60)
                                 CompensatedTime = 60;
                         }
-
                     }
 
                     Status.Start(weather, duration);
@@ -291,7 +287,10 @@ namespace 渔人的直感
             else if (Status.Type == Status.StatusType.Weather)
             {
                 if (Data.SpecialWeathers.All(x => currentWeather != x.Id))
+                {
+                    Debug.WriteLine($"Ending");
                     Status.End();
+                }
             }
         }
 
