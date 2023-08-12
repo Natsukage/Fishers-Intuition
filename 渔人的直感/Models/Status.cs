@@ -31,9 +31,9 @@ namespace 渔人的直感.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Visibility"));
         }
 
-        public void Start(SpecialWeather weather) //特殊天气触发
+        public void Start(SpecialWeather weather, float duration) //特殊天气触发
         {
-            Start(weather.Duration, StatusType.Weather, weather.Name);
+            Start(weather.Id == 145 ? duration : weather.Duration, StatusType.Weather, weather.Name);
         }
 
         public void End()

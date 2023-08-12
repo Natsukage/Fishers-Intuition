@@ -190,7 +190,7 @@ namespace 渔人的直感.Models
             var mBase = IsCopy ? this.moduleCopyPtr : TextSectionBase;
 
             //var scanRet = Scan(mBase, TextSectionSize, signature);
-            var scanRet = (IntPtr)MemLib.AoBScan(signature,false, true).GetAwaiter().GetResult().FirstOrDefault();
+            var scanRet = (IntPtr)MemLib.AoBScan(signature,false, true).GetAwaiter().GetResult().FirstOrDefault(result => result >= (long)TextSectionBase && result <= (long)TextSectionTop);
             //MemLib.AoBScan();
             if (IsCopy)
                 scanRet = new IntPtr(scanRet.ToInt64() - this.moduleCopyOffset);
