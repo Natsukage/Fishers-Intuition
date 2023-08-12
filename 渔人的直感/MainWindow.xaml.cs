@@ -287,10 +287,7 @@ namespace 渔人的直感
             else if (Status.Type == Status.StatusType.Weather)
             {
                 if (Data.SpecialWeathers.All(x => currentWeather != x.Id))
-                {
-                    Debug.WriteLine($"Ending");
                     Status.End();
-                }
             }
         }
 
