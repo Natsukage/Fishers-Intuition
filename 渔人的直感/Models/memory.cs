@@ -1969,7 +1969,6 @@ namespace Memory
 
                 Debug.WriteLine("[DEBUG] memory scan starting... (start:0x" + start.ToString(MSize()) + " end:0x" + end.ToString(MSize()) + " time:" + DateTime.Now.ToString("h:mm:ss tt") + ")");
                 UIntPtr currentBaseAddress = new UIntPtr((ulong)start);
-
                 MEMORY_BASIC_INFORMATION memInfo = new MEMORY_BASIC_INFORMATION();
 
                 //Debug.WriteLine("[DEBUG] start:0x" + start.ToString("X8") + " curBase:0x" + currentBaseAddress.ToUInt64().ToString("X8") + " end:0x" + end.ToString("X8") + " size:0x" + memInfo.RegionSize.ToString("X8") + " vAloc:" + VirtualQueryEx(pHandle, currentBaseAddress, out memInfo).ToUInt64().ToString());
@@ -2056,7 +2055,7 @@ namespace Memory
 
                 Debug.WriteLine("[DEBUG] memory scan completed. (time:" + DateTime.Now.ToString("h:mm:ss tt") + ")");
 
-                return bagResult.ToList().OrderBy(c => c).AsEnumerable();
+                return bagResult.ToList().AsEnumerable();
             });
         }
 
@@ -2094,7 +2093,8 @@ namespace Memory
                     result = FindPattern((byte*)buffer.ToPointer(), (int)bytesRead, aobPattern, mask, result + aobPattern.Length);
 
                     if (result >= 0)
-                        ret.Add((long) item.CurrentBaseAddress + result);
+                        ret.Add((long)item.CurrentBaseAddress + result);
+
 
                 } while (result != -1);
             }

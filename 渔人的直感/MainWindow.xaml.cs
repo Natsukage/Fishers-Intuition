@@ -27,6 +27,11 @@ namespace 渔人的直感
         public static MainWindow CurrentMainWindow;
         private Window _settingsWindow;
 
+        private float CompensatedTime = 0f;
+        private byte LastOceanFishingZone = 0;
+        private bool LastZoneHasSpectralCurrent = false;
+        private bool CurrentZoneHadSpectralCurrent = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -73,7 +78,6 @@ namespace 渔人的直感
 
             Scanner = new SigScanner(GameProcess, GameProcessMainModule);
             Data.Initialize(Scanner);
-
             Worker = new BackgroundWorker();
             Worker.DoWork += OnWork;
             Worker.WorkerSupportsCancellation = true;
@@ -143,9 +147,8 @@ namespace 渔人的直感
 
                     var buffTablePtr = Scanner.ReadIntPtr(Data.ActorTable) + Data.UiStatusEffects;
                     BuffCheck(buffTablePtr);
-
+                    OceanFishingZoneCheck();
                     WeatherCheck(Data.WeatherPtr);
-
 
                     if (Fish.State == FishingState.Casting) Fish.Update();
                     if (Status.IsActive) Status.Update();
@@ -231,6 +234,10 @@ namespace 渔人的直感
             }
             else if (buffTablePtr == (IntPtr) Data.UiStatusEffects) //当前激活中 且 指针指向空角色（在登录界面等未加载人物的情况）
             {
+                LastZoneHasSpectralCurrent = false;
+                CurrentZoneHadSpectralCurrent = false;
+                CompensatedTime = 0f;
+                LastOceanFishingZone = byte.MaxValue;
                 Status.End();
             }
             else if (Status.Type == Status.StatusType.FishEyes)
@@ -250,13 +257,76 @@ namespace 渔人的直感
             if (!Status.IsActive)
             {
                 foreach (var weather in Data.SpecialWeathers)
-                    if (weather.Id == currentWeather)
-                        Status.Start(weather);
+                {
+                    if (weather.Id != currentWeather) continue;
+
+                    var duration = weather.Duration;
+                    //幻海流
+                    if (weather.Id == 145)
+                    {
+                        CurrentZoneHadSpectralCurrent = true;
+                        //获取当前海域剩余时间
+                        var remainingTime = Data.OceanFishingRemainingTime;
+                        duration = 120f + CompensatedTime;
+                        // 如果上个海域没幻海,加60秒
+                        if (!LastZoneHasSpectralCurrent)
+                            duration += 60;
+
+                        //如果这轮幻海吃不满
+                        if (remainingTime - duration < 30)
+                        {
+                            //下一轮就要补这么多时间
+                            CompensatedTime = remainingTime - duration - 30;
+                            if (CompensatedTime < 0)
+                                CompensatedTime = 0;
+                            else if (CompensatedTime > 60)
+                                CompensatedTime = 60;
+                        }
+
+                    }
+
+                    Status.Start(weather, duration);
+                }
             }
             else if (Status.Type == Status.StatusType.Weather)
             {
                 if (Data.SpecialWeathers.All(x => currentWeather != x.Id))
                     Status.End();
+            }
+        }
+
+        private void OceanFishingZoneCheck()
+        {
+            // 海钓的TerritoryId是900
+            if (Data.TerritoryType != 900)
+            {
+                Debug.WriteLine($"TerritoryType {Data.TerritoryType}");
+                LastZoneHasSpectralCurrent = false;
+                CurrentZoneHadSpectralCurrent = false;
+                CompensatedTime = 0f;
+                LastOceanFishingZone = byte.MaxValue;
+                return;
+            }
+
+            try
+            {
+                var currentZone = Data.OceanFishingCurrentZone;
+                if (LastOceanFishingZone == currentZone) 
+                    return;
+
+                //换海域了
+                Debug.WriteLine("Moving to next zone");
+                LastZoneHasSpectralCurrent = CurrentZoneHadSpectralCurrent;
+                CurrentZoneHadSpectralCurrent = false;
+                LastOceanFishingZone = currentZone;
+            }
+            catch
+            {
+                //如果有异常的话那就是不在海钓任务里
+                LastZoneHasSpectralCurrent = false;
+                CurrentZoneHadSpectralCurrent = false;
+                CompensatedTime = 0f;
+                LastOceanFishingZone = byte.MaxValue;
             }
         }
 
