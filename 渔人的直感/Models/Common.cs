@@ -28,6 +28,7 @@ namespace 渔人的直感.Models
         private static short oceanFishingCurrentZoneOffset;
         private static short contentTimeLeftOffset;
         private static short contentDirectorTypeOffset;
+        private static short eventInfoOffset;
 
         public static IntPtr WeatherPtr => _scanner.ReadIntPtr(weatherPtr) + 0x20;
 
@@ -76,14 +77,10 @@ namespace 渔人的直感.Models
             //Weather用于获取当前天气，判断幻海流、空岛特殊天气触发等。
             weatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 0F 28 DE") + 8;
 
-            var territoryTypeAddress = scanner.GetStaticAddressFromSig("8B 05 ? ? ? ? 45 0F B6 F9");
-            territoryTypePtr = territoryTypeAddress;
-            // territoryTypePtr = IntPtr.Add(scanner.Module.BaseAddress, (int)territoryTypePtr);
-            Debug.WriteLine($"{territoryTypePtr.ToInt64():X} / {territoryTypeAddress.ToInt64():X} / {scanner.Module.BaseAddress.ToInt64():X}");
-
+            territoryTypePtr = scanner.GetStaticAddressFromSig("8B 05 ? ? ? ? 45 0F B6 F9");
+            
             //获取EventFrameworkPtr
             eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 8B 35 ?? ?? ?? ?? 0F B6 EA 4C 8B F1");
-            Debug.WriteLine($"eventFrameworkPtr {eventFrameworkPtrAddress.ToInt64():X} / {scanner.Module.BaseAddress.ToInt64():X}");
 
             //获取Offset相关
             contentDirectorOffset = scanner.ReadInt16(scanner.ScanText("48 83 B9 ?? ?? ?? ?? ?? 74 ?? B0 ?? C3 48 8B 81"), 3);
@@ -91,12 +88,7 @@ namespace 渔人的直感.Models
             oceanFishingCurrentZoneOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83"), 3);
             contentTimeLeftOffset = scanner.ReadInt16(scanner.ScanText("F3 0F 10 81 ?? ?? ?? ?? 0F 2F C4"), 4);
             contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B9 ?? ?? ?? ?? ?? 48 8B D9 75 ?? 48 8B 49 ?? BA"), 2);
-
-            Debug.WriteLine($"contentDirectorOffset: {contentDirectorOffset:X}");
-            Debug.WriteLine($"oceanFishingTimeOffsetOffset: {oceanFishingTimeOffsetOffset:X}");
-            Debug.WriteLine($"contentTimeLeftOffset: {contentTimeLeftOffset:X}");
-            Debug.WriteLine($"contentDirectorTypeOffset: {contentDirectorTypeOffset:X}");
-            
+            eventInfoOffset = scanner.ReadInt16(scanner.ScanText("48 8B 88 ? ? ? ? 45 8B C6"), 3);
 
             SpecialWeathers.Add(new SpecialWeather { Id = 145, Name = "幻海流", Duration = 120f });
             if (Properties.Settings.Default.CheckDiademWeather)
@@ -116,7 +108,6 @@ namespace 渔人的直感.Models
             //找不到EventFrameworkPtr
             if (eventFrameworkPtr == IntPtr.Zero)
             {
-                Debug.WriteLine("Invalid eventFrameworkPtr");
                 return IntPtr.Zero;
             }
 
@@ -124,28 +115,20 @@ namespace 渔人的直感.Models
             //找不到ContentDirector
             if (directorPtr == IntPtr.Zero)
             {
-                Debug.WriteLine("Invalid directorPtr");
-
                 return IntPtr.Zero;
             }
 
-            //检查Director类型是否为InstanceContent
-            /*var unkPtr = _scanner.ReadIntPtr(directorPtr + 8);
-            var val = _scanner.ReadInt16(unkPtr + 2, 2);
-            Debug.WriteLine($"{unkPtr.ToInt64():X} / {val:X}");
-            var type = BitConverter.ToUInt16(_scanner.ReadBytes((unkPtr + 2), 2), 0);
-            if (type != 0x8003)
+            //检查Director类型是否为InstanceContent.下面这个获取方法也可以,但rebuild的函数里不是这样实现的,所以就注释掉了
+            // var directorType = BitConverter.ToUInt16(_scanner.ReadBytes(directorPtr + 0x22, 2), 0);
+            var directorType = BitConverter.ToUInt16(_scanner.ReadBytes(_scanner.ReadIntPtr(directorPtr + eventInfoOffset), 2), 0);
+            if (directorType != 0x8003)
             {
-                Debug.WriteLine("Invalid director type");
-
                 return IntPtr.Zero;
-            }*/
+            }
 
             //检查InstanceContent的类型是否为OceanFishing
             if (_scanner.ReadByte(directorPtr, contentDirectorTypeOffset) != 16)
             {
-                Debug.WriteLine("Invalid InstanceContent type");
-
                 return IntPtr.Zero;
             }
 

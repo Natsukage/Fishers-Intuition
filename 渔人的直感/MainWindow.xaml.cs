@@ -297,14 +297,10 @@ namespace 渔人的直感
 
         private void OceanFishingZoneCheck()
         {
-            // 海钓的TerritoryId是900
+            // 检查是否在海钓里
             if (Data.TerritoryType != 900)
             {
-                Debug.WriteLine($"TerritoryType {Data.TerritoryType}");
-                LastZoneHasSpectralCurrent = false;
-                CurrentZoneHadSpectralCurrent = false;
-                CompensatedTime = 0f;
-                LastOceanFishingZone = byte.MaxValue;
+                Reset();
                 return;
             }
 
@@ -323,10 +319,8 @@ namespace 渔人的直感
             catch
             {
                 //如果有异常的话那就是不在海钓任务里
-                LastZoneHasSpectralCurrent = false;
-                CurrentZoneHadSpectralCurrent = false;
-                CompensatedTime = 0f;
-                LastOceanFishingZone = byte.MaxValue;
+                //不过既然都检查了TerritoryId的话,感觉这个也没必要?
+                Reset();
             }
         }
 
@@ -364,6 +358,14 @@ namespace 渔人的直感
             if (WindowState != WindowState.Minimized)
                 Properties.Settings.Default.Location = new System.Drawing.Point((int) Left, (int) Top);
             Properties.Settings.Default.Save();
+        }
+
+        private void Reset()
+        {
+            LastZoneHasSpectralCurrent = false;
+            CurrentZoneHadSpectralCurrent = false;
+            CompensatedTime = 0f;
+            LastOceanFishingZone = byte.MaxValue;
         }
     }
 }
