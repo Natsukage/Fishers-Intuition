@@ -305,17 +305,16 @@ namespace 渔人的直感
                 if (LastOceanFishingZone == currentZone) 
                     return;
 
-                //换海域了
-                Debug.WriteLine("Moving to next zone");
-                LastZoneHasSpectralCurrent = CurrentZoneHadSpectralCurrent;
+                Debug.WriteLine($"[{DateTime.Now}] Moving to next zone / {LastOceanFishingZone:X}:{currentZone:X} / {Data.OceanFishingRemainingTime}");
+                //换海域了, 刚进来的时候海域是0,所以直接设成false
+                LastZoneHasSpectralCurrent = currentZone != 0 && CurrentZoneHadSpectralCurrent;
                 CurrentZoneHadSpectralCurrent = false;
                 LastOceanFishingZone = currentZone;
             }
             catch
             {
-                //如果有异常的话那就是不在海钓任务里
-                //不过既然都检查了TerritoryId的话,感觉这个也没必要?
-                Reset();
+                //换海域的时候ContentDirectorPtr是null..??
+                // Reset();
             }
         }
 
