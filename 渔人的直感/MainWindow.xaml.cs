@@ -28,9 +28,6 @@ namespace 渔人的直感
 
         private float CompensatedTime;
         private int SpectralCurrnetCount;
-        private int LastOceanFishingZone;
-        private bool LastZoneHasSpectralCurrent;
-        private bool CurrentZoneHadSpectralCurrent;
 
         public MainWindow()
         {
@@ -261,7 +258,6 @@ namespace 渔人的直感
                     // 幻海流
                     if (weather.Id == 145)
                     {
-                        CurrentZoneHadSpectralCurrent = true;
                         //获取当前海域剩余时间
                         var remainingTime = Data.OceanFishingRemainingTime;
                         var currentZone = Data.OceanFishingCurrentZone;
@@ -355,10 +351,7 @@ namespace 渔人的直感
 
         private void Reset()
         {
-            LastZoneHasSpectralCurrent = false;
-            CurrentZoneHadSpectralCurrent = false;
             CompensatedTime = 0f;
-            LastOceanFishingZone = byte.MaxValue;
             SpectralCurrnetCount = 0;
         }
     }
