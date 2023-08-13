@@ -84,7 +84,7 @@ namespace 渔人的直感.Models
 
             //获取Offset相关
             contentDirectorOffset = scanner.ReadInt16(scanner.ScanText("48 83 B9 ?? ?? ?? ?? ?? 74 ?? B0 ?? C3 48 8B 81"), 3);
-            oceanFishingTimeOffsetOffset = scanner.ReadInt16(scanner.ScanText("89 83 ? ? ? ? 48 89 83 ? ? ? ? 48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83"), 2);
+            oceanFishingTimeOffsetOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83 ? ? ? ? 48 8B C3"), 3);
             oceanFishingCurrentZoneOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83"), 3);
             contentTimeLeftOffset = scanner.ReadInt16(scanner.ScanText("F3 0F 10 81 ?? ?? ?? ?? 0F 2F C4"), 4);
             contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B9 ?? ?? ?? ?? ?? 48 8B D9 75 ?? 48 8B 49 ?? BA"), 2);
@@ -138,6 +138,7 @@ namespace 渔人的直感.Models
                 Debug.WriteLine("Invalid InstanceContent type");
                 return IntPtr.Zero;
             }
+
 
             return directorPtr;
         }
