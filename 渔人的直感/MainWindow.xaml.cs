@@ -27,7 +27,8 @@ namespace 渔人的直感
         private Window _settingsWindow;
 
         private float CompensatedTime;
-        private byte LastOceanFishingZone;
+        private int SpectralCurrnetCount;
+        private int LastOceanFishingZone;
         private bool LastZoneHasSpectralCurrent;
         private bool CurrentZoneHadSpectralCurrent;
 
@@ -257,15 +258,24 @@ namespace 渔人的直感
                     if (weather.Id != currentWeather) continue;
 
                     var duration = weather.Duration;
-                    //幻海流
+                    // 幻海流
                     if (weather.Id == 145)
                     {
                         CurrentZoneHadSpectralCurrent = true;
                         //获取当前海域剩余时间
                         var remainingTime = Data.OceanFishingRemainingTime;
+                        var currentZone = Data.OceanFishingCurrentZone;
                         duration = 120f + CompensatedTime;
-                        // 如果上个海域没幻海,加60秒
-                        if (!LastZoneHasSpectralCurrent)
+
+                        // 下面这个写法应该没问题,因为:
+                        // 1. 海钓只有3个海域
+                        // 2. 只有在触发幻海的时候才会更新SpectralCurrnetCount
+                        // 比如: 第一个海域触发了, SpectralCurrnetCount变成1
+                        // 但是第二个海域没触发,到第三个海域触发了,此时currentZone是2
+                        // 所以第三个海域会有60秒的补偿时间
+
+                        // 如果上个海域没幻海,而且不是刚进,加60秒
+                        if (currentZone != 0 && SpectralCurrnetCount != currentZone)
                             duration += 60;
 
                         //如果这轮幻海吃不满
@@ -277,10 +287,18 @@ namespace 渔人的直感
                                 CompensatedTime = 0;
                             else if (CompensatedTime > 60)
                                 CompensatedTime = 60;
+                            duration = remainingTime - 30;
                         }
+
+                        // 防止第一次海域没触,第二次触了但是没吃满,导致第三次海域的时间不对的问题
+                        if (SpectralCurrnetCount == 0 && currentZone > 0)
+                            SpectralCurrnetCount = currentZone;
+                        else
+                            SpectralCurrnetCount++;
                     }
 
                     Status.Start(weather, duration);
+                    break;
                 }
             }
             else if (Status.Type == Status.StatusType.Weather)
@@ -296,25 +314,6 @@ namespace 渔人的直感
             if (Data.TerritoryType != 900)
             {
                 Reset();
-                return;
-            }
-
-            try
-            {
-                var currentZone = Data.OceanFishingCurrentZone;
-                if (LastOceanFishingZone == currentZone) 
-                    return;
-
-                Debug.WriteLine($"[{DateTime.Now}] Moving to next zone / {LastOceanFishingZone:X}:{currentZone:X} / {Data.OceanFishingRemainingTime}");
-                //换海域了, 刚进来的时候海域是0,所以直接设成false
-                LastZoneHasSpectralCurrent = currentZone != 0 && CurrentZoneHadSpectralCurrent;
-                CurrentZoneHadSpectralCurrent = false;
-                LastOceanFishingZone = currentZone;
-            }
-            catch
-            {
-                //换海域的时候ContentDirectorPtr是null..??
-                // Reset();
             }
         }
 
@@ -360,6 +359,7 @@ namespace 渔人的直感
             CurrentZoneHadSpectralCurrent = false;
             CompensatedTime = 0f;
             LastOceanFishingZone = byte.MaxValue;
+            SpectralCurrnetCount = 0;
         }
     }
 }
