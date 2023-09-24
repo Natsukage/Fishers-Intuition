@@ -145,7 +145,16 @@ namespace 渔人的直感
                         status = nStatus;
                     }
 
-                    var buffTablePtr = Scanner.ReadIntPtr(Data.ActorTable) + Data.UiStatusEffects;
+                    var localplayer = Scanner.ReadIntPtr(Data.ActorTable);
+                    if (localplayer == IntPtr.Zero || Scanner.ReadByte(localplayer, Data.CharacterClassJobOffset) != 18)
+                    {
+                        Reset();
+                        Status.End();
+                        Fish.Reset();
+                        continue;
+                    }
+
+                    var buffTablePtr = localplayer + Data.UiStatusEffects;
                     BuffCheck(buffTablePtr);
                     OceanFishingZoneCheck();
                     WeatherCheck(Data.WeatherPtr);
@@ -231,24 +240,26 @@ namespace 渔人的直感
                         };*/
                         break;
                     }
-            }
-            else if (buffTablePtr == (IntPtr) Data.UiStatusEffects) //当前激活中 且 指针指向空角色（在登录界面等未加载人物的情况）
-            {
-                Debug.WriteLine("[BuffCheck] Reset");
-                Reset();
-                Status.End();
-            }
-            else if (Status.Type == Status.StatusType.FishEyes)
-            {
-                var fishEyeIsActive = false;
-                for (var i = 0; i < 30; i++)
-                    if (Scanner.ReadInt16(buffTablePtr + i * 12) == Data.FishEyesBuffId)
-                        fishEyeIsActive = true;
 
-                if (!fishEyeIsActive)
-                    Status.End();
+                return;
             }
+
+            if (Status.Type != Status.StatusType.FishEyes) return;
+            
+            var fishEyeIsActive = false;
+            for (var i = 0; i < 30; i++)
+            {
+                if (Scanner.ReadInt16(buffTablePtr + i * 12) != Data.FishEyesBuffId)
+                    continue;
+                fishEyeIsActive = true;
+                break;
+            }
+
+            if (!fishEyeIsActive)
+                Status.End();
+            
         }
+
         private void WeatherCheck(IntPtr weatherPtr)
         {
             var currentWeather = Scanner.ReadByte(weatherPtr);
@@ -318,7 +329,7 @@ namespace 渔人的直感
             // 检查是否在海钓里
             var territory = Data.TerritoryType;
             // 为什么换海域的时候territoryId会变成0啊啊啊啊啊
-            if (territory != 900 && territory != 0)
+            if (territory != 0 && !Data.IsInOceanFishing)
             {
                 Reset();
                 // Console.WriteLine($"[OceanFishingZoneCheck] Reset. {territory}");

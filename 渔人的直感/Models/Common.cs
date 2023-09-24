@@ -9,7 +9,6 @@ namespace 渔人的直感.Models
     /// </summary>
     public static class Data
     {
-
         public const int FishEyesBuffId = 762; // 50; //      鱼眼的Buff ID
 
         public static List<SpecialWeather> SpecialWeathers = new List<SpecialWeather>();
@@ -17,6 +16,8 @@ namespace 渔人的直感.Models
         private static SigScanner _scanner;
         public static IntPtr StatusPtr;
         public static IntPtr ActorTable;
+
+        public static short CharacterClassJobOffset;
         //public static IntPtr BuffTablePtr;
         private static IntPtr weatherPtr;
         private static IntPtr territoryTypePtr;
@@ -60,6 +61,8 @@ namespace 渔人的直感.Models
             }
         }
 
+        public static bool IsInOceanFishing => GetInstanceContentDirector() != IntPtr.Zero;
+
         public static int UiStatusEffects; //UIStatusEffects相对于ActorTable的偏移。此值随着版本更新随时可能发生改变。
 
         public static void Initialize(SigScanner scanner)
@@ -91,6 +94,10 @@ namespace 渔人的直感.Models
             eventInfoOffset = scanner.ReadInt16(scanner.ScanText("48 8B 88 ? ? ? ? 45 8B C6"), 3);
 
             UiStatusEffects = scanner.ReadInt32(scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"), 3);
+
+            var characterDataOffset = scanner.ReadInt16(scanner.ScanText("48 81 E9 ? ? ? ? E9 ? ? ? ? CC CC CC CC CC CC CC CC CC CC CC CC 40 53 48 83 EC ? 48 8D 05 ? ? ? ? 48 8B D9 48 89 01 F6 C2 ? 74 ? BA ? ? ? ? E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24"), 3);
+            var classJobOffset =  scanner.ReadByte(scanner.ScanText("44 0F B6 49 ? 88 51"), 4);
+            CharacterClassJobOffset = (short)(classJobOffset + characterDataOffset);
 
             SpecialWeathers.Add(new SpecialWeather { Id = 145, Name = "幻海流", Duration = 120f });
             if (Properties.Settings.Default.CheckDiademWeather)
@@ -139,10 +146,8 @@ namespace 渔人的直感.Models
                 return IntPtr.Zero;
             }
 
-
             return directorPtr;
         }
-
     }
 
     public struct SpecialWeather
