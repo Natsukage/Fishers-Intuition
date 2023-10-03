@@ -90,12 +90,12 @@ namespace 渔人的直感.Models
             oceanFishingTimeOffsetOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83 ? ? ? ? 48 8B C3"), 3);
             oceanFishingCurrentZoneOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83"), 3);
             contentTimeLeftOffset = scanner.ReadInt16(scanner.ScanText("F3 0F 10 81 ?? ?? ?? ?? 0F 2F C4"), 4);
-            contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B9 ?? ?? ?? ?? ?? 48 8B D9 75 ?? 48 8B 49 ?? BA"), 2);
+            contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B8 ?? ?? ?? ?? ?? 75 ?? 83 FB ?? 73 ?? 8B C3"), 2);
             eventInfoOffset = scanner.ReadInt16(scanner.ScanText("48 8B 88 ? ? ? ? 45 8B C6"), 3);
 
             UiStatusEffects = scanner.ReadInt32(scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"), 3);
 
-            var characterDataOffset = scanner.ReadInt16(scanner.ScanText("48 81 E9 ? ? ? ? E9 ? ? ? ? CC CC CC CC CC CC CC CC CC CC CC CC 40 53 48 83 EC ? 48 8D 05 ? ? ? ? 48 8B D9 48 89 01 F6 C2 ? 74 ? BA ? ? ? ? E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24"), 3);
+            var characterDataOffset = scanner.ReadInt16(scanner.ScanText("48 89 87 ? ? ? ? E8 ? ? ? ? 48 8D 8F ? ? ? ? 33 DB"), 3);
             var classJobOffset =  scanner.ReadByte(scanner.ScanText("44 0F B6 49 ? 88 51"), 4);
             CharacterClassJobOffset = (short)(classJobOffset + characterDataOffset);
 
