@@ -222,7 +222,7 @@ namespace 渔人的直感.Models
                 break;
             }
 
-            Debug.WriteLine($@"Finished scanning, {signature} -> scanRet: {scanRet:X}");
+            Debug.WriteLine($@"Finished scanning, {signature} -> scanRet: {scanRet.ToInt64():X}");
 
             if (scanRet != IntPtr.Zero && bytes[0] == 0xE8)
                 return ReadCallSig(scanRet);
@@ -280,7 +280,7 @@ namespace 渔人的直感.Models
             var disp = ReadInt32(instrAddr + offset);
 
             var result = instrAddr + disp + sizeof(int) + offset;
-            Debug.WriteLine($"GetStaticAddressFromSig. {signature} -> {result:X} (disp: {disp:X})");
+            Debug.WriteLine($"GetStaticAddressFromSig. {signature} -> {result.ToInt64():X} (disp: {disp:X})");
             return result;
         }
     }
