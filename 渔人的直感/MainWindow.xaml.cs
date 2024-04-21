@@ -146,7 +146,7 @@ namespace 渔人的直感
                     }
 
                     var localplayer = Scanner.ReadIntPtr(Data.ActorTable);
-                    if (localplayer == IntPtr.Zero || Scanner.ReadByte(localplayer, Data.CharacterClassJobOffset) != 18)
+                    if (localplayer == IntPtr.Zero || !Data.IsGathering)
                     {
                         Reset();
                         Status.End();

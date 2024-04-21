@@ -17,10 +17,10 @@ namespace 渔人的直感.Models
         public static IntPtr StatusPtr;
         public static IntPtr ActorTable;
 
-        public static short CharacterClassJobOffset;
         //public static IntPtr BuffTablePtr;
         private static IntPtr weatherPtr;
         private static IntPtr territoryTypePtr;
+        private static IntPtr conditionPtr;
 
         private static IntPtr eventFrameworkPtrAddress;
         private static IntPtr eventFrameworkPtr => _scanner.ReadIntPtr(eventFrameworkPtrAddress);
@@ -29,11 +29,12 @@ namespace 渔人的直感.Models
         private static short oceanFishingCurrentZoneOffset;
         private static short contentTimeLeftOffset;
         private static short contentDirectorTypeOffset;
-        private static short eventInfoOffset;
 
         public static IntPtr WeatherPtr => _scanner.ReadIntPtr(weatherPtr) + 0x20;
 
         public static int TerritoryType => (_scanner.ReadInt32(territoryTypePtr));
+
+        public static bool IsGathering => _scanner.ReadByte(conditionPtr, 6) == 1;
 
         public static float OceanFishingRemainingTime
         {
@@ -69,21 +70,23 @@ namespace 渔人的直感.Models
         {
             _scanner = scanner;
             //Status用于获取EventPlay时玩家动作，判断抛竿、咬钩、脱钩动作。
-            StatusPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 48 8B AC 24");
+            StatusPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 48 8B AC 24", 3);
 
             //ActorTable用于获取UIStatusEffects地址，追踪玩家身上的buff
-            ActorTable = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? E8 ? ? ? ? 44 0F B6 83 ? ? ? ? C6 83");
+            ActorTable = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? E8 ? ? ? ? 44 0F B6 83 ? ? ? ? C6 83", 3);
             //玩家退回标题界面重新登录后，ActorTable地址不变，但是UIStatusEffects对应地址会变，因此不能在初始化时直接解析，只能在每次访问时解析。
             //当处于登录界面时，ActorTable第一位指向的Actor地址为0。可以据此判断当前处于登录界面。
             //Data.BuffTablePtr = scanner.ReadIntPtr(Data.ActorTable) + 6488;
 
             //Weather用于获取当前天气，判断幻海流、空岛特殊天气触发等。
-            weatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 0F 28 DE") + 8;
+            weatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 0F 28 DE", 3) + 8;
 
-            territoryTypePtr = scanner.GetStaticAddressFromSig("8B 05 ? ? ? ? 45 0F B6 F9");
+            territoryTypePtr = scanner.GetStaticAddressFromSig("8B 05 ? ? ? ? 45 0F B6 F9", 2);
+
+            conditionPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 41 8D 50 ? E8 ? ? ? ? 81 7B", 3);
 
             //获取EventFrameworkPtr
-            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 8B 35 ?? ?? ?? ?? 0F B6 EA 4C 8B F1");
+            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 8B 35 ?? ?? ?? ?? 0F B6 EA 4C 8B F1", 3);
 
             //获取Offset相关
             contentDirectorOffset = scanner.ReadInt16(scanner.ScanText("48 83 B9 ?? ?? ?? ?? ?? 74 ?? B0 ?? C3 48 8B 81"), 3);
@@ -91,13 +94,8 @@ namespace 渔人的直感.Models
             oceanFishingCurrentZoneOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83"), 3);
             contentTimeLeftOffset = scanner.ReadInt16(scanner.ScanText("F3 0F 10 81 ?? ?? ?? ?? 0F 2F C4"), 4);
             contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B8 ?? ?? ?? ?? ?? 75 ?? 83 FB ?? 73 ?? 8B C3"), 2);
-            eventInfoOffset = scanner.ReadInt16(scanner.ScanText("48 8B 88 ? ? ? ? 45 8B C6"), 3);
 
             UiStatusEffects = scanner.ReadInt32(scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"), 3);
-
-            var characterDataOffset = scanner.ReadInt16(scanner.ScanText("48 89 87 ? ? ? ? E8 ? ? ? ? 48 8D 8F ? ? ? ? 33 DB"), 3);
-            var classJobOffset =  scanner.ReadByte(scanner.ScanText("44 0F B6 49 ? 88 51"), 4);
-            CharacterClassJobOffset = (short)(classJobOffset + characterDataOffset);
 
             SpecialWeathers.Add(new SpecialWeather { Id = 145, Name = "幻海流", Duration = 120f });
             if (Properties.Settings.Default.CheckDiademWeather)
