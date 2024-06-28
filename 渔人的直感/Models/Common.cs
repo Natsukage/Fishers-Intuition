@@ -70,7 +70,7 @@ namespace 渔人的直感.Models
         {
             _scanner = scanner;
             //Status用于获取EventPlay时玩家动作，判断抛竿、咬钩、脱钩动作。
-            StatusPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 48 8B AC 24", 3);
+            StatusPtr = scanner.GetStaticAddressFromSig("4C 8D 0D ?? ?? ?? ?? 4C 8B 13", 3);
 
             //ActorTable用于获取UIStatusEffects地址，追踪玩家身上的buff
             ActorTable = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? E8 ? ? ? ? 44 0F B6 83 ? ? ? ? C6 83", 3);
@@ -86,10 +86,10 @@ namespace 渔人的直感.Models
             conditionPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 41 8D 50 ? E8 ? ? ? ? 81 7B", 3);
 
             //获取EventFrameworkPtr
-            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 8B 35 ?? ?? ?? ?? 0F B6 EA 4C 8B F1", 3);
+            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 83 3D ?? ?? ?? ?? ?? 44 0F B6 F0", 3);
 
             //获取Offset相关
-            contentDirectorOffset = scanner.ReadInt16(scanner.ScanText("48 83 B9 ?? ?? ?? ?? ?? 74 ?? B0 ?? C3 48 8B 81"), 3);
+            contentDirectorOffset = scanner.ReadInt16(scanner.ScanText("48 83 B9 ?? ?? ?? ?? ?? 75 ?? 48 8B 81"), 3);
             oceanFishingTimeOffsetOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83 ? ? ? ? 48 8B C3"), 3);
             oceanFishingCurrentZoneOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83"), 3);
             contentTimeLeftOffset = scanner.ReadInt16(scanner.ScanText("F3 0F 10 81 ?? ?? ?? ?? 0F 2F C4"), 4);
