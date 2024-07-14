@@ -81,7 +81,7 @@ namespace 渔人的直感.Models
             //Weather用于获取当前天气，判断幻海流、空岛特殊天气触发等。
             weatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 0F 28 DE", 3) + 8;
 
-            /*territoryTypePtr = scanner.GetStaticAddressFromSig("8B 05 ? ? ? ? 45 0F B6 F9", 2);*/
+            territoryTypePtr = scanner.GetStaticAddressFromSig("8B 0D ? ? ? ? E8 ? ? ? ? 48 85 C0 74 ? 0F B7 40", 2);
 
             conditionPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 45 33 C0 4C 8B F0", 3);
 
