@@ -70,7 +70,7 @@ namespace 渔人的直感.Models
         {
             _scanner = scanner;
             //Status用于获取EventPlay时玩家动作，判断抛竿、咬钩、脱钩动作。
-            StatusPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 48 8B AC 24", 3);
+            StatusPtr = scanner.GetStaticAddressFromSig("4C 8D 0D ?? ?? ?? ?? 4C 8B 13", 3);
 
             //ActorTable用于获取UIStatusEffects地址，追踪玩家身上的buff
             ActorTable = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? E8 ? ? ? ? 44 0F B6 83 ? ? ? ? C6 83", 3);
@@ -81,21 +81,42 @@ namespace 渔人的直感.Models
             //Weather用于获取当前天气，判断幻海流、空岛特殊天气触发等。
             weatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 0F 28 DE", 3) + 8;
 
-            territoryTypePtr = scanner.GetStaticAddressFromSig("8B 05 ? ? ? ? 45 0F B6 F9", 2);
+            territoryTypePtr = scanner.GetStaticAddressFromSig("8B 0D ? ? ? ? E8 ? ? ? ? 48 85 C0 74 ? 0F B7 40", 2);
 
-            conditionPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 41 8D 50 ? E8 ? ? ? ? 81 7B", 3);
+            conditionPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 45 33 C0 4C 8B F0", 3);
 
             //获取EventFrameworkPtr
-            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 8B 35 ?? ?? ?? ?? 0F B6 EA 4C 8B F1", 3);
+            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 83 3D ?? ?? ?? ?? ?? 44 0F B6 F0", 3);
 
             //获取Offset相关
-            contentDirectorOffset = scanner.ReadInt16(scanner.ScanText("48 83 B9 ?? ?? ?? ?? ?? 74 ?? B0 ?? C3 48 8B 81"), 3);
+            
+            var contentDirectoryAddress = scanner.ScanText("48 83 B9 ? ? ? ? ? 74 ? B0 ? C3 48 8B 81"); // 国服6.57
+            if (contentDirectoryAddress == IntPtr.Zero)
+                contentDirectoryAddress = scanner.ScanText("48 83 B9 ?? ?? ?? ?? ?? 75 ?? 48 8B 81"); // 国际服 7.0
+
+            contentDirectorOffset = scanner.ReadInt16(contentDirectoryAddress, 3);
+
             oceanFishingTimeOffsetOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83 ? ? ? ? 48 8B C3"), 3);
             oceanFishingCurrentZoneOffset = scanner.ReadInt16(scanner.ScanText("48 89 83 ? ? ? ? 48 89 83 ? ? ? ? 88 83 ? ? ? ? 89 83 ? ? ? ? 88 83"), 3);
-            contentTimeLeftOffset = scanner.ReadInt16(scanner.ScanText("F3 0F 10 81 ?? ?? ?? ?? 0F 2F C4"), 4);
-            contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B8 ?? ?? ?? ?? ?? 75 ?? 83 FB ?? 73 ?? 8B C3"), 2);
 
-            UiStatusEffects = scanner.ReadInt32(scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"), 3);
+            var contentTimeLeftOffsetAddress = scanner.ScanText("40 53 48 83 EC ? 0F B6 81 ? ? ? ? 48 8B D9 A8 ? 0F 84 ? ? ? ? A8 ? 0F 84") + 0x2a;
+            contentTimeLeftOffset = scanner.ReadInt16(contentTimeLeftOffsetAddress, 4);
+            Debug.WriteLine($"{contentTimeLeftOffset:X}");
+            
+            // TODO: 等国服更新7.0后用 "80 B8 ? ? ? ? ? 75 ? 83 FB ? 73 ? 8B C3"
+            var contentDirectorTypeOffsetAddress = scanner.ScanText("E8 ? ? ? ? 0F B6 4D ? 48 8D 55 ? 66 3B C8");
+            if (scanner.ReadInt16(contentDirectorTypeOffsetAddress, 0x1d) == 0xB80) // 国服6.57
+                contentDirectorTypeOffsetAddress += 0x1d;
+            else
+                contentDirectorTypeOffsetAddress += 0x1a;
+
+            contentDirectorTypeOffset = scanner.ReadInt16(contentDirectorTypeOffsetAddress, 2);
+
+            var uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"); // 国服6.57
+            if (uiStatusEffectstAddress == IntPtr.Zero)
+                uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 8B 41"); // 国际服7.0
+
+            UiStatusEffects = scanner.ReadInt32(uiStatusEffectstAddress, 3);
 
             SpecialWeathers.Add(new SpecialWeather { Id = 145, Name = "幻海流", Duration = 120f });
             if (Properties.Settings.Default.CheckDiademWeather)
