@@ -86,8 +86,8 @@ namespace 渔人的直感.Models
             conditionPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 45 33 C0 4C 8B F0", 3);
 
             //获取EventFrameworkPtr
-            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 83 3D ?? ?? ?? ?? ?? 44 0F B6 F0", 3);
-
+            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 8B 35 ?? ?? ?? ?? 0F B6 EA 4C 8B F1", 3);
+            // eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 83 3D ?? ?? ?? ?? ?? 44 0F B6 F0", 3);
             //获取Offset相关
             
             var contentDirectoryAddress = scanner.ScanText("48 83 B9 ? ? ? ? ? 74 ? B0 ? C3 48 8B 81"); // 国服6.57
@@ -103,15 +103,16 @@ namespace 渔人的直感.Models
             contentTimeLeftOffset = scanner.ReadInt16(contentTimeLeftOffsetAddress, 4);
             Debug.WriteLine($"{contentTimeLeftOffset:X}");
             
-            // TODO: 等国服更新7.0后用 "80 B8 ? ? ? ? ? 75 ? 83 FB ? 73 ? 8B C3"
-            var contentDirectorTypeOffsetAddress = scanner.ScanText("E8 ? ? ? ? 0F B6 4D ? 48 8D 55 ? 66 3B C8");
-            if (scanner.ReadInt16(contentDirectorTypeOffsetAddress, 0x1d) == 0xB80) // 国服6.57
-                contentDirectorTypeOffsetAddress += 0x1d;
-            else
-                contentDirectorTypeOffsetAddress += 0x1a;
+            //暂时有问题先注掉
+            // // TODO: 等国服更新7.0后用 "80 B8 ? ? ? ? ? 75 ? 83 FB ? 73 ? 8B C3"
+            // var contentDirectorTypeOffsetAddress = scanner.ScanText("E8 ? ? ? ? 0F B6 4D ? 48 8D 55 ? 66 3B C8");
+            // if (scanner.ReadInt16(contentDirectorTypeOffsetAddress, 0x1d) == 0xB80) // 国服6.57
+            //     contentDirectorTypeOffsetAddress += 0x1d;
+            // else
+            //     contentDirectorTypeOffsetAddress += 0x1a;
 
-            contentDirectorTypeOffset = scanner.ReadInt16(contentDirectorTypeOffsetAddress, 2);
-
+            // contentDirectorTypeOffset = scanner.ReadInt16(contentDirectorTypeOffsetAddress, 2);
+            contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B8 ?? ?? ?? ?? ?? 75 ?? 83 FB ?? 73 ?? 8B C3"), 2);
             var uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"); // 国服6.57
             if (uiStatusEffectstAddress == IntPtr.Zero)
                 uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 8B 41"); // 国际服7.0
