@@ -151,6 +151,8 @@ namespace 渔人的直感
                         Reset();
                         Status.End();
                         Fish.Reset();
+                        //挂机会导致cpu飙高
+                        Thread.Sleep(50);
                         continue;
                     }
 
