@@ -144,9 +144,9 @@ namespace 渔人的直感
                         StatusChange(nStatus);
                         status = nStatus;
                     }
-
-                    var localplayer = Scanner.ReadIntPtr(Data.ActorTable);
-                    if (localplayer == IntPtr.Zero || !Data.IsGathering)
+                    
+                    var localPlayer = Scanner.ReadIntPtr(Data.ActorTable);
+                    if (localPlayer == IntPtr.Zero)
                     {
                         Reset();
                         Status.End();
@@ -156,10 +156,12 @@ namespace 渔人的直感
                         continue;
                     }
 
-                    var buffTablePtr = localplayer + Data.UiStatusEffects;
-                    BuffCheck(buffTablePtr);
+                    if (!Data.IsGathering) Fish.Reset();
                     OceanFishingZoneCheck();
                     WeatherCheck(Data.WeatherPtr);
+                    var buffTablePtr = localPlayer + Data.UiStatusEffects;
+                    BuffCheck(buffTablePtr);
+
 
                     if (Fish.State == FishingState.Casting) Fish.Update();
                     if (Status.IsActive) Status.Update();

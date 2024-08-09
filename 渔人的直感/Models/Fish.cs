@@ -73,7 +73,7 @@ namespace 渔人的直感.Models
 			//起身后，界面重置。
 			State = FishingState.None;
 			Update();
-		}
+		} 
 
 		public void Update()
 		{
