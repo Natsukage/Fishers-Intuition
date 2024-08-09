@@ -201,8 +201,7 @@ namespace 渔人的直感.Models
             var scanSize = textSectionBytes.Count - bytes.Length;
             for (var i = 0; i < scanSize; i++)
             {
-                if (firstByte != 0xFFFF)
-                    i = textSectionBytes.IndexOf((byte)firstByte, i);
+                if (firstByte != 0xFFFF && (i = textSectionBytes.IndexOf((byte)firstByte, i)) == -1) break;
 
                 var found = true;
 
@@ -215,7 +214,6 @@ namespace 渔人的直感.Models
                     found = false;
                     break;
                 }
-
                 if (!found)
                     continue;
                 scanRet = TextSectionBase + i;
