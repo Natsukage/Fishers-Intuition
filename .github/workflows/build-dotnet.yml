@@ -30,7 +30,7 @@ jobs:
         cp 渔人的直感/Wav/* temp_artifact/
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4 # 更新为 v4
       with:
         name: 渔人的直感
         path: temp_artifact/*
