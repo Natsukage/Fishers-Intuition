@@ -103,16 +103,8 @@ namespace 渔人的直感.Models
             contentTimeLeftOffset = scanner.ReadInt16(contentTimeLeftOffsetAddress, 4);
             Debug.WriteLine($"{contentTimeLeftOffset:X}");
             
-            //暂时有问题先注掉
-            // // TODO: 等国服更新7.0后用 "80 B8 ? ? ? ? ? 75 ? 83 FB ? 73 ? 8B C3"
-            // var contentDirectorTypeOffsetAddress = scanner.ScanText("E8 ? ? ? ? 0F B6 4D ? 48 8D 55 ? 66 3B C8");
-            // if (scanner.ReadInt16(contentDirectorTypeOffsetAddress, 0x1d) == 0xB80) // 国服6.57
-            //     contentDirectorTypeOffsetAddress += 0x1d;
-            // else
-            //     contentDirectorTypeOffsetAddress += 0x1a;
+            contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B8 ?? ?? ?? ?? ?? 75 ?? 83 FB ?? 73 ?? 0F B7 84 58"), 2);
 
-            // contentDirectorTypeOffset = scanner.ReadInt16(contentDirectorTypeOffsetAddress, 2);
-            contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B8 ?? ?? ?? ?? ?? 75 ?? 83 FB ?? 73 ?? 8B C3"), 2);
             var uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"); // 国服6.57
             if (uiStatusEffectstAddress == IntPtr.Zero)
                 uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 8B 41"); // 国际服7.0
