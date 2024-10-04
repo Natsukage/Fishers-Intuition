@@ -32,5 +32,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4 # 更新为 v4
       with:
-        name: 渔人的直感
+        name: FishersIntuition
         path: temp_artifact/*
