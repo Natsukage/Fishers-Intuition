@@ -86,7 +86,7 @@ namespace 渔人的直感.Models
             conditionPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 45 33 C0 4C 8B F0", 3);
 
             //获取EventFrameworkPtr
-            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 8B 35 ?? ?? ?? ?? 0F B6 EA 4C 8B F1", 3);
+            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 83 3D ? ? ? ? ? 8B 9B", 3);
             // eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 83 3D ?? ?? ?? ?? ?? 44 0F B6 F0", 3);
             //获取Offset相关
             
