@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-
 namespace 渔人的直感.Models
 {
     /// <summary>
@@ -111,6 +110,9 @@ namespace 渔人的直感.Models
         public int ReadInt32(IntPtr address, int offset = 0) => BitConverter.ToInt32(ReadBytes(IntPtr.Add(address, offset), 4), 0);
 
         public short ReadInt16(IntPtr address, int offset = 0) => BitConverter.ToInt16(ReadBytes(IntPtr.Add(address, offset), 2), 0);
+
+        public ushort ReadUInt16(IntPtr address, int offset = 0)
+            => BitConverter.ToUInt16(ReadBytes(IntPtr.Add(address, offset), 2), 0);
 
         public byte ReadByte(IntPtr address, int offset = 0) => ReadBytes(IntPtr.Add(address, offset), 1)[0];
 

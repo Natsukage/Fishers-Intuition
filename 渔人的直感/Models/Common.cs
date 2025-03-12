@@ -24,6 +24,8 @@ namespace 渔人的直感.Models
 
         private static IntPtr eventFrameworkPtrAddress;
         private static IntPtr eventFrameworkPtr => _scanner.ReadIntPtr(eventFrameworkPtrAddress);
+        private static short  eventInfoOffset;
+
         private static short contentDirectorOffset;
         private static short oceanFishingTimeOffsetOffset;
         private static short oceanFishingCurrentZoneOffset;
@@ -86,13 +88,12 @@ namespace 渔人的直感.Models
             conditionPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 45 33 C0 4C 8B F0", 3);
 
             //获取EventFrameworkPtr
-            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 83 3D ? ? ? ? ? 8B 9B", 3);
-            // eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 83 3D ?? ?? ?? ?? ?? 44 0F B6 F0", 3);
+            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("4C 39 2D ?? ?? ?? ?? 74 14", 3);
+
             //获取Offset相关
-            
-            var contentDirectoryAddress = scanner.ScanText("48 83 B9 ? ? ? ? ? 74 ? B0 ? C3 48 8B 81"); // 国服6.57
-            if (contentDirectoryAddress == IntPtr.Zero)
-                contentDirectoryAddress = scanner.ScanText("48 83 B9 ?? ?? ?? ?? ?? 75 ?? 48 8B 81"); // 国际服 7.0
+            eventInfoOffset = scanner.ReadInt16(scanner.ScanText("48 8B 88 ? ? ? ? BA ? ? ? ? 66 39 51 ? 75 ? F6 80"), 3);
+
+            var contentDirectoryAddress = scanner.ScanText("48 83 B9 ?? ?? ?? ?? ?? 75 ?? 48 8B 81"); // 国服6.57
 
             contentDirectorOffset = scanner.ReadInt16(contentDirectoryAddress, 3);
 
@@ -105,9 +106,7 @@ namespace 渔人的直感.Models
             
             contentDirectorTypeOffset = scanner.ReadInt16(scanner.ScanText("80 B8 ?? ?? ?? ?? ?? 75 ?? 83 FB ?? 73 ?? 0F B7 84 58"), 2);
 
-            var uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 48 8B D9"); // 国服6.57
-            if (uiStatusEffectstAddress == IntPtr.Zero)
-                uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 8B 41"); // 国际服7.0
+            var uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 8B 41");
 
             UiStatusEffects = scanner.ReadInt32(uiStatusEffectstAddress, 3);
 
@@ -127,13 +126,17 @@ namespace 渔人的直感.Models
         private static IntPtr GetInstanceContentDirector()
         {
             //找不到EventFrameworkPtr
-            if (eventFrameworkPtr == IntPtr.Zero)
+            var eventFramework = eventFrameworkPtr;
+
+            if (eventFramework == IntPtr.Zero)
             {
                 Debug.WriteLine("Invalid eventFrameworkPtr");
+
                 return IntPtr.Zero;
             }
 
-            var directorPtr = _scanner.ReadIntPtr(eventFrameworkPtr + contentDirectorOffset);
+            var directorPtr = _scanner.ReadIntPtr(eventFramework + contentDirectorOffset);
+
             //找不到ContentDirector
             if (directorPtr == IntPtr.Zero)
             {
@@ -141,10 +144,9 @@ namespace 渔人的直感.Models
                 return IntPtr.Zero;
             }
 
-            //检查Director类型是否为InstanceContent. 下面这个也可以
-            // var directorType = _scanner.ReadInt16(_scanner.ReadIntPtr(directorPtr + eventInfoOffset), 2);
-            //这个是从FFXivClientStructs里看到的,应该不会变的吧
-            var directorType = BitConverter.ToUInt16(_scanner.ReadBytes(directorPtr + 0x22, 2), 0);
+            //检查Director类型是否为InstanceContent
+            var directorType = _scanner.ReadUInt16(_scanner.ReadIntPtr(directorPtr + eventInfoOffset), 2);
+
             if (directorType != 0x8003)
             {
                 Debug.WriteLine("Invalid director type");
