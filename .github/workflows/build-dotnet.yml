@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - master
@@ -30,7 +32,22 @@ jobs:
         cp 渔人的直感/Wav/* temp_artifact/
 
     - name: Upload artifacts
+      if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v')
       uses: actions/upload-artifact@v4 # 更新为 v4
       with:
         name: FishersIntuition
         path: temp_artifact/*
+
+    - name: Zip release files
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: powershell Compress-Archive -Path temp_artifact/* -DestinationPath FishersIntuition-${{ github.ref_name }}.zip
+
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v2
+      with:
+        name: "渔人的直感 ${{ github.ref_name }}"
+        tag_name: ${{ github.ref_name }}
+        files: FishersIntuition-${{ github.ref_name }}.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
