@@ -48,7 +48,6 @@ jobs:
       with:
         name: "渔人的直感 ${{ github.ref_name }}"
         tag_name: ${{ github.ref_name }}
-        body: "" # release description
         files: FishersIntuition-${{ github.ref_name }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
