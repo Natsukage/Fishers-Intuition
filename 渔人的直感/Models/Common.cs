@@ -81,14 +81,14 @@ namespace 渔人的直感.Models
             //Data.BuffTablePtr = scanner.ReadIntPtr(Data.ActorTable) + 6488;
 
             //Weather用于获取当前天气，判断幻海流、空岛特殊天气触发等。
-            weatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 0F 28 DE", 3) + 8;
+            weatherPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? E8 ? ? ? ? 0F B6 C8 83 E9 ? 74 ? 83 E9 ? 74 ? 83 F9 ? 74 ? 32 C0 48 83 C4 ? C3 48 8B 05", 3) + 8;
 
             territoryTypePtr = scanner.GetStaticAddressFromSig("8B 0D ? ? ? ? E8 ? ? ? ? 48 85 C0 74 ? 0F B7 40", 2);
 
             conditionPtr = scanner.GetStaticAddressFromSig("48 8D 0D ? ? ? ? 45 33 C0 4C 8B F0", 3);
 
             //获取EventFrameworkPtr
-            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("4C 39 2D ?? ?? ?? ?? 74 14", 3);
+            eventFrameworkPtrAddress = scanner.GetStaticAddressFromSig("48 8B 05 ? ? ? ? 48 85 C0 74 ? 83 B8 ? ? ? ? ? 7C", 3);
 
             //获取Offset相关
             eventInfoOffset = scanner.ReadInt16(scanner.ScanText("48 8B 88 ? ? ? ? BA ? ? ? ? 66 39 51 ? 75 ? F6 80"), 3);
